@@ -1,12 +1,6 @@
 {
-  "name": "m7d-bot",
-  "version": "1.0.0",
-  "description": "Discord Bot",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
   "dependencies": {
+    "@discordjs/voice": "^0.17.0",
     "discord.js": "^14.14.1"
   }
 }
