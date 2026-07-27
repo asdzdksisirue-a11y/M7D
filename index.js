@@ -1,27 +1,31 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const client = new Client({ 
-  intents: [
-    GatewayIntentBits.Guilds, 
-    GatewayIntentBits.GuildMessages, 
-    GatewayIntentBits.MessageContent
-  ] 
+const { joinVoiceChannel } = require('@discordjs/voice');
+
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
 });
 
-const CHANNEL_ID = '1531117523376934932';
+client.once('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
 
-client.on('ready', async () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-
-  try {
-    const channel = await client.channels.fetch(CHANNEL_ID);
+    const voiceChannelId = '1531117523376934932';
+    const channel = client.channels.cache.get(voiceChannelId);
+    
     if (channel) {
-      const message = await channel.send('هلا بك يا مجيد! البوت شغال ومثبت هنا 📌');
-      await message.pin();
-      console.log('تم تثبيت الرسالة بنجاح!');
+        joinVoiceChannel({
+            channelId: channel.id,
+            guildId: channel.guild.id,
+            adapterCreator: channel.guild.voiceAdapterCreator,
+        });
+        console.log("دخل البوت الروم الصوتي بنجاح!");
+    } else {
+        console.log("ما لقيت الروم الصوتي، تأكد من الآي دي!");
     }
-  } catch (error) {
-    console.error('حدث خطأ أثناء إرسال أو تثبيت الرسالة:', error);
-  }
 });
 
 client.login(process.env.TOKEN);
